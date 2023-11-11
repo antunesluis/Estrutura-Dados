@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "poker_cards.h": "c",
+        "time.h": "c"
+    }
+}

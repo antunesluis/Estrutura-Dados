@@ -31,7 +31,4 @@ Card* list_get_val(const ListCards* L, int index);
 void list_inverted_print(const ListCards* L);
 void list_remove(ListCards* L, Card* card);
 
-
-
-
 #endif
