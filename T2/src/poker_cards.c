@@ -127,7 +127,7 @@ void list_add_last(ListCards* L, Card* card) {
     L->size++;
 }
 
-Card* list_get_val(const ListCards* L, int index) {
+Card* list_get_card(const ListCards* L, int index) {
     check_empty_list(L, "List_get_val");
 
     if (index < 0 || index >= L->size) {

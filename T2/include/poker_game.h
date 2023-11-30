@@ -9,7 +9,7 @@
 typedef struct _game_hand GameHand;
 typedef struct _player Player;
 
-void create_primary_decks(ListCards* list_player, ListCards* list_robot);
+void create_decks(ListCards* list_player, ListCards* list_robot);
 Player* create_player(ListCards* deck);
 
 void read_decks(Player* p);

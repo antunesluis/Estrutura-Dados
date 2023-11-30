@@ -37,23 +37,46 @@ void add_card_to_list(ListCards* L, Card* card) {
     list_add_first(L, card);
 }
 
-void create_primary_decks(ListCards* deck_1, ListCards* deck_2) {
-    srand((unsigned int)time(NULL));
+ListCards* create_starter_deck() {
+    ListCards* deck = list_create();
 
     for (int i = 1; i <= NUM_SUITS; i++) {
         for (int j = 2; j <= NUM_RANKS; j++) {
-            int random_number = rand() % 2;  // Gera 0 ou 1
-
             Card* C = card_create(j, i);
-
-            // Adiciona cartas aleatoriamente aos decks dos jogadores
-            if (random_number == 0) {
-                add_card_to_list(deck_1, C);
-            }
-            else {
-                add_card_to_list(deck_2, C);
-            }
+            add_card_to_list(deck, C);
         }
+    }
+
+    // list_cards_print(deck);
+
+    return deck;
+}
+
+void move_random_card_to_player(ListCards* starter_deck, ListCards* player_deck) {
+    srand((unsigned int)time(NULL));
+
+    int random_card_index = rand() % list_size(starter_deck);
+    Card* C = list_get_card(starter_deck, random_card_index);
+
+    // // printf("Até aqui 2 !!");
+
+    add_card_to_list(player_deck, C);
+    list_remove(starter_deck, C);
+}
+
+void create_decks(ListCards* deck_p1, ListCards* deck_p2) {
+    ListCards* starter_deck = create_starter_deck();
+
+    printf("\n\n\n");
+    list_cards_print(starter_deck);
+
+    // // printf("Até aqui!!");
+
+    while (list_size(starter_deck) != 0) {
+        // // printf("Até aqui 3!!");
+        move_random_card_to_player(starter_deck, deck_p1);
+        // // printf("Até aqui 4!!");
+        move_random_card_to_player(starter_deck, deck_p2);
     }
 }
 
