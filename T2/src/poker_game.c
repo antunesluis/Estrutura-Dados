@@ -50,38 +50,29 @@ ListCards* create_starter_deck() {
     return deck;
 }
 
+void add_card_deck(ListCards* deck, int rank, Suit suit) {
+    Card* C = card_create(rank, suit);
+    list_add_first(deck, C);
+}
+
 void move_random_card_to_player(ListCards* starter_deck, ListCards* player_deck) {
     int random_card_index = rand() % list_size(starter_deck);
     Card* C = list_get_card(starter_deck, random_card_index);
 
-    print_card(C);
-
-    list_add_first(player_deck, C);
+    add_card_deck(player_deck, get_rank(C), get_suit(C));
     list_remove(starter_deck, C);
 }
 
 void create_decks(ListCards* deck_p1, ListCards* deck_p2) {
     ListCards* starter_deck = create_starter_deck();
 
-    printf("\n\n\nBaralho inicial de cartas: ");
+    printf("\nStarter deck: ");
     list_cards_print(starter_deck);
 
     while (list_size(starter_deck) > 0) {
         move_random_card_to_player(starter_deck, deck_p1);
         move_random_card_to_player(starter_deck, deck_p2);
     }
-
-
-    printf("\n\n\nBaralho 1: ");
-    list_cards_print(deck_p1);
-
-    printf("\n\n\nBaralho 2: ");
-    list_cards_print(deck_p2);
-
-    printf("\n\n\nBaralho inicial de cartas: ");
-    list_cards_print(starter_deck);
-
-
 }
 
 void init_hand(GameHand* h) {
@@ -102,5 +93,3 @@ Player* create_player(ListCards* deck) {
 
     return p;
 }
-
-

@@ -38,14 +38,8 @@ Card* list_get_card(const ListCards* L, int index);
 void list_remove(ListCards* L, Card* card);
 
 
-
-
-
-
-
-
-
-
+int get_rank(Card* C);
+Suit get_suit(Card* C);
 void print_card(Card* c);
 
 

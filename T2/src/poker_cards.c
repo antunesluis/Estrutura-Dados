@@ -256,13 +256,13 @@ void list_remove(ListCards* L, Card* card) {
     free(card);
 }
 
+int get_rank(Card* C) {
+    return C->rank;
+}
 
-
-
-
-
-
-
+Suit get_suit(Card* C) {
+    return C->suit;
+}
 
 void print_card(Card* c) {
     printf("rank: %d\n", c->rank);
