@@ -19,21 +19,8 @@ int main() {
     Player* p1 = create_player(deck_1);
     Player* p2 = create_player(deck_2);
 
-    read_decks(p1);
-
-
-
-    //create_player_deck; 
-
-    //create_robot_deck; 
-
-    // Card* C = card_create(1, 2);
-    // list_add_first(L, C);
-
-    // Card* C2 = card_create(3, 4);
-    // list_add_first(L, C2);
-
-    // list_print(L);
+    list_destroy(&deck_1);
+    list_destroy(&deck_2);
 
     return 0;
 }

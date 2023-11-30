@@ -91,12 +91,15 @@ void check_empty_list(const ListCards* L, const char* function_name) {
 }
 
 size_t list_size(const ListCards* L) {
-    check_empty_list(L, "List_size");
+    //check_empty_list(L, "List_size");
     return L->size;
 }
 
 void list_add_first(ListCards* L, Card* card) {
     Node* p = node_crete(card);
+
+    //print_card(p->card);
+
     p->next = L->begin;
 
     if (list_is_empty(L)) {
@@ -109,6 +112,9 @@ void list_add_first(ListCards* L, Card* card) {
     // List_is_empty(L) ? (L->end = p) : (L->begin->prev = p); 
     L->begin = p;
     L->size++;
+
+    // print_card(L->begin->card);
+
 }
 
 void list_add_last(ListCards* L, Card* card) {
@@ -250,3 +256,15 @@ void list_remove(ListCards* L, Card* card) {
     free(card);
 }
 
+
+
+
+
+
+
+
+
+void print_card(Card* c) {
+    printf("rank: %d\n", c->rank);
+    printf("suit: %d\n", c->suit);
+}

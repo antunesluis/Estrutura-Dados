@@ -37,4 +37,17 @@ Card* list_get_card(const ListCards* L, int index);
 
 void list_remove(ListCards* L, Card* card);
 
+
+
+
+
+
+
+
+
+
+void print_card(Card* c);
+
+
+
 #endif

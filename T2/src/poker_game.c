@@ -29,7 +29,7 @@ typedef struct _player {
 
 
 #define NUM_SUITS 4
-#define NUM_RANKS 13
+#define NUM_RANKS 14
 #define NUM_HANDS 5 
 
 
@@ -43,41 +43,45 @@ ListCards* create_starter_deck() {
     for (int i = 1; i <= NUM_SUITS; i++) {
         for (int j = 2; j <= NUM_RANKS; j++) {
             Card* C = card_create(j, i);
-            add_card_to_list(deck, C);
+            list_add_first(deck, C);
         }
     }
-
-    // list_cards_print(deck);
 
     return deck;
 }
 
 void move_random_card_to_player(ListCards* starter_deck, ListCards* player_deck) {
-    srand((unsigned int)time(NULL));
-
     int random_card_index = rand() % list_size(starter_deck);
     Card* C = list_get_card(starter_deck, random_card_index);
 
-    // // printf("Até aqui 2 !!");
+    print_card(C);
 
-    add_card_to_list(player_deck, C);
+    list_add_first(player_deck, C);
     list_remove(starter_deck, C);
 }
 
 void create_decks(ListCards* deck_p1, ListCards* deck_p2) {
     ListCards* starter_deck = create_starter_deck();
 
-    printf("\n\n\n");
+    printf("\n\n\nBaralho inicial de cartas: ");
     list_cards_print(starter_deck);
 
-    // // printf("Até aqui!!");
-
-    while (list_size(starter_deck) != 0) {
-        // // printf("Até aqui 3!!");
+    while (list_size(starter_deck) > 0) {
         move_random_card_to_player(starter_deck, deck_p1);
-        // // printf("Até aqui 4!!");
         move_random_card_to_player(starter_deck, deck_p2);
     }
+
+
+    printf("\n\n\nBaralho 1: ");
+    list_cards_print(deck_p1);
+
+    printf("\n\n\nBaralho 2: ");
+    list_cards_print(deck_p2);
+
+    printf("\n\n\nBaralho inicial de cartas: ");
+    list_cards_print(starter_deck);
+
+
 }
 
 void init_hand(GameHand* h) {
@@ -97,15 +101,6 @@ Player* create_player(ListCards* deck) {
     }
 
     return p;
-}
-
-void read_decks(Player* p) {
-    // for (int i = 0; i < p->num_hands; i++) {
-    //     list_cards_print(p->primary_deck);
-    // }
-
-    list_cards_print(p->primary_deck);
-
 }
 
 
