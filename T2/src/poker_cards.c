@@ -34,22 +34,6 @@ typedef struct _doubly_linked_list {
 } DoublyLinkedList, ListCards;
 
 
-bool list_is_empty(const ListCards* L) {
-    return L->size == 0;
-}
-
-void check_empty_list(const ListCards* L, const char* function_name) {
-    if (list_is_empty(L)) {
-        fprintf(stderr, "ERROR in '%s'\n", function_name);
-        fprintf(stderr, "List is empty\n");
-        exit(EXIT_FAILURE);
-    }
-}
-
-size_t list_size(const ListCards* L) {
-    check_empty_list(L, "List_size");
-    return L->size;
-}
 
 Card* card_create(int rank, Suit suit) {
     Card* C = (Card*)calloc(1, sizeof(Card));
@@ -92,6 +76,23 @@ void list_destroy(ListCards** L_ref) {
     free(L);
 
     *L_ref = NULL;
+}
+
+bool list_is_empty(const ListCards* L) {
+    return L->size == 0;
+}
+
+void check_empty_list(const ListCards* L, const char* function_name) {
+    if (list_is_empty(L)) {
+        fprintf(stderr, "ERROR in '%s'\n", function_name);
+        fprintf(stderr, "List is empty\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
+size_t list_size(const ListCards* L) {
+    check_empty_list(L, "List_size");
+    return L->size;
 }
 
 void list_add_first(ListCards* L, Card* card) {
@@ -144,7 +145,20 @@ Card* list_get_val(const ListCards* L, int index) {
     return p->card;
 }
 
-void list_print(const ListCards* L) {
+void list_cards_print(const ListCards* L) {
+    Node* p = L->begin;
+
+    printf("\nCartas restantes: %lu\n", L->size);
+
+    for (int i = 0; i < L->size; i++) {
+        printf("%d. : ", i);
+        printf("rank: %d, valete: %d\n", p->card->rank, p->card->suit);
+        p = p->next;
+    }
+    puts("");
+}
+
+void linked_print(const ListCards* L) {
     Node* p = L->begin;
 
     printf("\nSize: %lu\n", L->size);
@@ -165,7 +179,7 @@ void list_print(const ListCards* L) {
     puts("");
 }
 
-void list_inverted_print(const ListCards* L) {
+void linked_inverted_print(const ListCards* L) {
     Node* p = L->end;
 
     printf("\nSize: %lu\n", L->size);
