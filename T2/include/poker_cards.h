@@ -33,7 +33,9 @@ void linked_print(const ListCards* L);
 void linked_inverted_print(const ListCards* L);
 void list_cards_print(const ListCards* L);
 
+void list_set_card(ListCards* L, int index, Card* new_card);
 Card* list_get_card(const ListCards* L, int index);
+
 
 void list_remove(ListCards* L, Card* card);
 

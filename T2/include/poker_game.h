@@ -11,8 +11,10 @@ typedef struct _player Player;
 
 void create_decks(ListCards* list_player, ListCards* list_robot);
 Player* create_player(ListCards* deck);
+void destroy_player(Player** P_ref);
 
 void read_decks(Player* p);
 void ia_read_decks(Player* p);
+void read_player_hands(Player* P);
 
 #endif

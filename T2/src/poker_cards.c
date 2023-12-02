@@ -6,14 +6,6 @@
 #include <string.h>
 #include <stddef.h>
 
-// typedef enum {
-//     HEARTS = 1,
-//     DIAMONDS,
-//     CLUBS,
-//     SPADES
-// } Suit;
-
-
 typedef struct _card {
     int rank;
     Suit suit;
@@ -131,6 +123,24 @@ void list_add_last(ListCards* L, Card* card) {
     // List_is_empty(L) ? (L->begin = p) : (L->end->prev = p);
     L->end = p;
     L->size++;
+}
+
+void list_set_card(ListCards* L, int index, Card* new_card) {
+    check_empty_list(L, "list_set_card");
+
+    if (index < 0 || index >= L->size) {
+        fprintf(stderr, "ERROR in 'list_set_card'\n");
+        fprintf(stderr, "Invalid index: %d\n", index);
+        fprintf(stderr, "Try an index within [0, %lu]\n", L->size - 1);
+        exit(EXIT_FAILURE);
+    }
+
+    Node* p = L->begin;
+    for (int i = 0; i != index; i++) {
+        p = p->next;
+    }
+
+    p->card = new_card;
 }
 
 Card* list_get_card(const ListCards* L, int index) {
