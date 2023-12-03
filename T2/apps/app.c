@@ -1,4 +1,4 @@
-#include "poker_game.h"
+#include "poker_player_hands.h"
 
 #include <stdio.h>
 #include <stdlib.h>

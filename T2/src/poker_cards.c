@@ -7,7 +7,7 @@
 #include <stddef.h>
 
 typedef struct _card {
-    int rank;
+    Rank rank;
     Suit suit;
 } Card;
 
@@ -27,7 +27,7 @@ typedef struct _doubly_linked_list {
 
 
 
-Card* card_create(int rank, Suit suit) {
+Card* card_create(Rank rank, Suit suit) {
     Card* C = (Card*)calloc(1, sizeof(Card));
     C->rank = rank;
     C->suit = suit;
@@ -155,6 +155,21 @@ Card* list_get_card(const ListCards* L, int index) {
 
     Node* p = L->begin;
     for (int i = 0; i != index; i++) {
+        p = p->next;
+    }
+
+    return p->card;
+}
+
+Card* list_get_card_by_rank(const ListCards* L, Rank rank) {
+    check_empty_list(L, "List_get_val");
+
+    Node* p = L->begin;
+    for (int i = 0; i != L->size; i++) {
+        if (p->card->rank == rank) {
+            break;
+        }
+
         p = p->next;
     }
 

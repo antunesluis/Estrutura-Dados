@@ -12,7 +12,8 @@ all: libed myapps
 
 libed: $(OBJ)/poker_cards.o \
 	$(OBJ)/poker_decks.o \
-	$(OBJ)/poker_game.o
+	$(OBJ)/poker_player_hands.o \
+	$(OBJ)/poker_ia.o
 	ar -rcs $(LIB)/libed.a $(OBJ)/*.o 
 
 myapps: clean_apps \

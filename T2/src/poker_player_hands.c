@@ -1,6 +1,6 @@
 #include "poker_cards.h"
 #include "poker_decks.h"
-#include "poker_game.h"
+#include "poker_player_hands.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,13 +8,6 @@
 #include <string.h>
 #include <stddef.h>
 #include <time.h>
-
-
-typedef enum {
-    PLAYER,
-    ROBOT
-} PlayerType;
-
 
 typedef struct _game_hand {
     ListCards* cards;
