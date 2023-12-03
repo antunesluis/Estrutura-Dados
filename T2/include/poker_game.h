@@ -2,6 +2,7 @@
 #define CARD_RANKING_H
 
 #include "poker_cards.h"
+#include "poker_decks.h"
 
 #include <stdbool.h>
 #include <stddef.h>

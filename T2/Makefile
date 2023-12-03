@@ -11,6 +11,7 @@ LIBS = -lm -led -L $(LIB)
 all: libed myapps
 
 libed: $(OBJ)/poker_cards.o \
+	$(OBJ)/poker_decks.o \
 	$(OBJ)/poker_game.o
 	ar -rcs $(LIB)/libed.a $(OBJ)/*.o 
 

@@ -164,10 +164,11 @@ Card* list_get_card(const ListCards* L, int index) {
 void list_cards_print(const ListCards* L) {
     Node* p = L->begin;
 
-    printf("\nCartas restantes: %lu\n", L->size);
+    //printf("\nCartas restantes: %lu\n", L->size);
 
+    puts("");
     for (int i = 0; i < L->size; i++) {
-        printf("%d. : ", i);
+        printf("\t%02d. : ", i);
         printf("rank: %d, valete: %d\n", p->card->rank, p->card->suit);
         p = p->next;
     }

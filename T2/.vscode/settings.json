@@ -5,6 +5,8 @@
         "stdbool.h": "c",
         "stddef.h": "c",
         "poker_game.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "type_traits": "c",
+        "poker_decks.h": "c"
     }
 }
