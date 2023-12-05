@@ -9,10 +9,11 @@ typedef struct _doubly_node DoublyNode, Node;
 typedef struct _doubly_linked_list DoublyLinkedList, ListCards;
 
 typedef enum {
-    HEARTS = 1,
-    DIAMONDS,
-    CLUBS,
-    SPADES
+    SUIT_HEARTS = 1,
+    SUIT_DIAMONDS,
+    SUIT_CLUBS,
+    SUIT_SPADES,
+    SUIT_N,
 } Suit;
 
 typedef enum {
@@ -29,6 +30,7 @@ typedef enum {
     RANK_QUEEN,
     RANK_KING,
     RANK_ACE,
+    RANK_N,
 } Rank;
 
 ListCards* list_create();
@@ -36,7 +38,6 @@ void list_destroy(ListCards** L_ref);
 
 Node* node_crete(Card* card);
 Card* card_create(Rank rank, Suit suit);
-void list_destroy(ListCards** L_ref);
 
 bool list_is_empty(const ListCards* L);
 void check_empty_list(const ListCards* L, const char* function_name);

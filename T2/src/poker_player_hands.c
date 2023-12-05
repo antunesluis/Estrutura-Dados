@@ -21,14 +21,11 @@ typedef struct _player {
     ListCards* deck;
     GameHand* hands;
     int num_hands;
-    int cards_per_hand;
 } Player;
 
 
-#define NUM_SUITS 4
-#define NUM_RANKS 14
 #define NUM_HANDS 5
-#define NUM_CARD_PER_HANDS 5
+
 
 void wait_for_enter() {
     printf("Press Enter to continue...");
@@ -49,7 +46,6 @@ Player* create_player(ListCards* deck) {
 
     p->deck = deck;
     p->num_hands = NUM_HANDS;
-    p->cards_per_hand = NUM_CARD_PER_HANDS;
     p->hands = (GameHand*)calloc(p->num_hands, sizeof(GameHand));
 
     for (int i = 0; i < p->num_hands; i++) {
@@ -73,59 +69,30 @@ void destroy_player(Player** P_ref) {
     *P_ref = NULL;
 }
 
+void add_card_to_hand(ListCards* hand, Rank rank, Suit suit) {
+    Card* C = card_create(rank, suit);
+    list_add_first(hand, C);
+}
+
 bool validate_index_bounds(size_t deck_size, int index) {
     if (index < 0 || index >= deck_size) {
-        printf("\nÍndice inválido. Por favor, digite um valor entre 0 e %lu: ", deck_size - 1);
+        printf("\nÍndice inválido. O valor deve estar entre 0 e %lu: ", deck_size - 1);
         return false;
     }
 
     return true;
 }
 
-int get_index_for_card(ListCards* deck) {
-    int card_index = 0;
-    printf("\nDigite o número da carta que você deseja incluir na sua mão: ");
-
-    while (true) {
-        if (scanf("%d", &card_index) != 1 || !validate_index_bounds(list_size(deck), card_index)) {
-            while (getchar() != '\n');
-        }
-        else {
-            break;
-        }
-    }
-    puts("");
-
-    return card_index;
-}
-
-Card* get_user_selected_card(ListCards* deck) {
-    list_cards_print(deck);
-    int card_index = get_index_for_card(deck);
-
-    return list_get_card(deck, card_index);
-}
-
-ListCards* read_cards_hand(ListCards* deck) {
-    ListCards* hand = list_create();
-
-    for (int i = 0; i < NUM_CARD_PER_HANDS; i++) {
-        Card* C = get_user_selected_card(deck);
-        add_card_to_deck(hand, get_rank(C), get_suit(C));
-        list_remove(deck, C);
-    }
-
-    return hand;
-}
-
-void print_hand(ListCards* hand) {
-    clear_terminal();
+void print_hand(ListCards* hand_cards) {
+    //clear_terminal();
     printf("\n---- Mao criada com sucesso ----\n");
-    list_cards_print(hand);
+    list_cards_print(hand_cards);
+    puts("");
 }
 
 void print_all_hands(Player* P) {
-    clear_terminal();
+    //clear_terminal();
+
     printf("\n---- Maos criadas ----\n");
 
     for (int i = 0; i < P->num_hands; i++) {
@@ -135,19 +102,45 @@ void print_all_hands(Player* P) {
     }
 }
 
-void read_player_hands(Player* P) {
+int search_for_classification(Player* P, ListCards* hand_cards) {
+    int pontos = 0;
+
+    if (search_pair(P->deck, hand_cards)) {
+        pontos = 1000;
+        return pontos;
+    }
+
+    if (search_two_pair(P->deck, hand_cards)) {
+        pontos = 930;
+        return pontos;
+    }
+
+    if (search_three_of_a_kind(P->deck, hand_cards)) {
+        pontos = 432;
+        return pontos;
+    }
+
+    if (search_straight(P->deck, hand_cards)) {
+        pontos = 323;
+        return pontos;
+    }
+
+    return pontos;  // ou apenas "return 0;" se preferir
+}
+
+void read_hands(Player* P) {
+    printf("\n---- Deck Original ----");
+    list_cards_print(P->deck);
+
     for (int i = 0; i < P->num_hands; i++) {
-        //clear_terminal();
-        printf("\n---- Criando a mao numero %d ----\n", i + 1);
 
-        P->hands[i].cards = read_cards_hand(P->deck);
 
-        if (search_pair(P->hands[i].cards, 14)) {
-            P->hands[i].points = 200;
-        }
-
+        P->hands[i].points = search_for_classification(P, P->hands[i].cards);
         print_hand(P->hands[i].cards);
         printf("PONTOS: %d", P->hands[i].points);
     }
+
     print_all_hands(P);
 }
+
+
