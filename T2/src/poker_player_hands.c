@@ -1,6 +1,8 @@
 #include "poker_cards.h"
 #include "poker_decks.h"
+#include "poker_classification.h"
 #include "poker_player_hands.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -139,7 +141,13 @@ void read_player_hands(Player* P) {
         printf("\n---- Criando a mao numero %d ----\n", i + 1);
 
         P->hands[i].cards = read_cards_hand(P->deck);
+
+        if (search_pair(P->hands[i].cards, 14)) {
+            P->hands[i].points = 200;
+        }
+
         print_hand(P->hands[i].cards);
+        printf("PONTOS: %d", P->hands[i].points);
     }
     print_all_hands(P);
 }

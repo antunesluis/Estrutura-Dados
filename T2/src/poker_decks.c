@@ -11,7 +11,6 @@
 #define NUM_SUITS 4
 #define NUM_RANKS 14
 
-
 void add_card_to_deck(ListCards* deck, int rank, Suit suit) {
     Card* C = card_create(rank, suit);
     list_add_first(deck, C);
