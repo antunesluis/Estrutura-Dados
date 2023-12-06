@@ -51,9 +51,13 @@ void linked_inverted_print(const ListCards* L);
 void list_cards_print(const ListCards* L);
 
 void list_set_card(ListCards* L, int index, Card* new_card);
+
 Card* list_get_card(const ListCards* L, int index);
 Card* list_get_card_by_rank(const ListCards* L, Rank rank);
+Card* list_get_card_by_suit(const ListCards* L, Suit suit);
+Card* list_get_card_by_rank_and_suit(const ListCards* L, Rank rank, Suit suit);
 
+bool list_contains_card(const ListCards* L, Rank rank, Suit suit);
 
 void list_remove(ListCards* L, Card* card);
 

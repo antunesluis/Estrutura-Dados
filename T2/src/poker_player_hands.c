@@ -103,29 +103,43 @@ void print_all_hands(Player* P) {
 }
 
 int search_for_classification(Player* P, ListCards* hand_cards) {
-    int pontos = 0;
-
-    if (search_pair(P->deck, hand_cards)) {
-        pontos = 1000;
-        return pontos;
+    if (search_royal_straight_flush(P->deck, hand_cards)) {
+        return 1000;
     }
 
-    if (search_two_pair(P->deck, hand_cards)) {
-        pontos = 930;
-        return pontos;
+    if (search_straight_flush(P->deck, hand_cards)) {
+        return 750;
     }
 
-    if (search_three_of_a_kind(P->deck, hand_cards)) {
-        pontos = 432;
-        return pontos;
+    if (search_four_of_a_kind(P->deck, hand_cards)) {
+        return 500;
+    }
+
+    if (search_full_house(P->deck, hand_cards)) {
+        return 300;
+    }
+
+    if (search_flush(P->deck, hand_cards)) {
+        return 200;
     }
 
     if (search_straight(P->deck, hand_cards)) {
-        pontos = 323;
-        return pontos;
+        return 150;
     }
 
-    return pontos;  // ou apenas "return 0;" se preferir
+    if (search_three_of_a_kind(P->deck, hand_cards)) {
+        return 100;
+    }
+
+    if (search_two_pair(P->deck, hand_cards)) {
+        return 50;
+    }
+
+    if (search_pair(P->deck, hand_cards)) {
+        return 25;
+    }
+
+    return 0;
 }
 
 void read_hands(Player* P) {
@@ -133,8 +147,6 @@ void read_hands(Player* P) {
     list_cards_print(P->deck);
 
     for (int i = 0; i < P->num_hands; i++) {
-
-
         P->hands[i].points = search_for_classification(P, P->hands[i].cards);
         print_hand(P->hands[i].cards);
         printf("PONTOS: %d", P->hands[i].points);
@@ -142,5 +154,3 @@ void read_hands(Player* P) {
 
     print_all_hands(P);
 }
-
-

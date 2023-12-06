@@ -90,8 +90,6 @@ size_t list_size(const ListCards* L) {
 void list_add_first(ListCards* L, Card* card) {
     Node* p = node_crete(card);
 
-    //print_card(p->card);
-
     p->next = L->begin;
 
     if (list_is_empty(L)) {
@@ -104,8 +102,6 @@ void list_add_first(ListCards* L, Card* card) {
     // List_is_empty(L) ? (L->end = p) : (L->begin->prev = p); 
     L->begin = p;
     L->size++;
-
-    // print_card(L->begin->card);
 
 }
 
@@ -176,6 +172,51 @@ Card* list_get_card_by_rank(const ListCards* L, Rank rank) {
     return p->card;
 }
 
+Card* list_get_card_by_suit(const ListCards* L, Suit suit) {
+    check_empty_list(L, "List_get_val");
+
+    Node* p = L->begin;
+    for (int i = 0; i != L->size; i++) {
+        if (p->card->suit == suit) {
+            break;
+        }
+
+        p = p->next;
+    }
+
+    return p->card;
+}
+
+Card* list_get_card_by_rank_and_suit(const ListCards* L, Rank rank, Suit suit) {
+    check_empty_list(L, "List_get_val");
+
+    Node* p = L->begin;
+    for (int i = 0; i != L->size; i++) {
+        if (p->card->suit == suit && p->card->rank == rank) {
+            break;
+        }
+
+        p = p->next;
+    }
+
+    return p->card;
+}
+
+bool list_contains_card(const ListCards* L, Rank rank, Suit suit) {
+    check_empty_list(L, "List_get_val");
+
+    Node* p = L->begin;
+    for (int i = 0; i != L->size; i++) {
+        if (p->card->suit == suit && p->card->rank == rank) {
+            return true;
+        }
+
+        p = p->next;
+    }
+
+    return false;
+}
+
 void list_cards_print(const ListCards* L) {
     Node* p = L->begin;
 
@@ -186,48 +227,6 @@ void list_cards_print(const ListCards* L) {
         printf("\t%02d. : ", i);
         printf("rank: %d, valete: %d\n", p->card->rank, p->card->suit);
         p = p->next;
-    }
-    puts("");
-}
-
-void linked_print(const ListCards* L) {
-    Node* p = L->begin;
-
-    printf("\nSize: %lu\n", L->size);
-    printf("L -> ");
-
-    while (p != NULL) {
-        printf("rank: %d, valete: %d -> ", p->card->rank, p->card->suit);
-        p = p->next;
-    }
-    printf("NULL\n");
-
-    if (L->end == NULL) {
-        printf("L->end = NULL\n");
-    }
-    else {
-        printf("L->end = rank: %d, valete: %d\n", L->end->card->rank, L->end->card->suit);
-    }
-    puts("");
-}
-
-void linked_inverted_print(const ListCards* L) {
-    Node* p = L->end;
-
-    printf("\nSize: %lu\n", L->size);
-    printf("L ->end -> ");
-
-    while (p != NULL) {
-        printf("rank: %d, valete: %d -> ", p->card->rank, p->card->suit);
-        p = p->prev;
-    }
-    printf("NULL\n");
-
-    if (L->end == NULL) {
-        printf("L->begin = NULL\n");
-    }
-    else {
-        printf("L->begin = rank: %d, valete: %d\n", L->begin->card->rank, L->begin->card->suit);
     }
     puts("");
 }
@@ -294,3 +293,4 @@ void print_card(Card* c) {
     printf("rank: %d\n", c->rank);
     printf("suit: %d\n", c->suit);
 }
+
