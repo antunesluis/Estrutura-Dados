@@ -63,23 +63,34 @@ bool has_specific_rank_occurrences(int* rank_counts, int target_occurrences) {
     return false;
 }
 
-void draw_card_by_rank_and_suit(ListCards* deck, int rank, int suit, ListCards* hand_cards) {
+void draw_card_by_rank_and_suit(ListCards* deck, Rank rank, Suit suit, ListCards* hand_cards) {
     Card* C = list_get_card_by_rank_and_suit(deck, rank, suit);
     add_card_to_deck(hand_cards, get_rank(C), get_suit(C));
     list_remove(deck, C);
 }
 
-
-void draw_card_by_rank(ListCards* deck, int rank, ListCards* hand_cards) {
+void draw_card_by_rank(ListCards* deck, Rank rank, ListCards* hand_cards) {
     Card* C = list_get_card_by_rank(deck, rank);
     add_card_to_deck(hand_cards, get_rank(C), get_suit(C));
     list_remove(deck, C);
 }
 
-void draw_card_by_suit(ListCards* deck, int suit, ListCards* hand_cards) {
+void draw_card_by_suit(ListCards* deck, Suit suit, ListCards* hand_cards) {
     Card* C = list_get_card_by_suit(deck, suit);
     add_card_to_deck(hand_cards, get_rank(C), get_suit(C));
     list_remove(deck, C);
+}
+
+void draw_n_cards_by_rank(ListCards* deck, Rank rank, ListCards* hand_cards, int num_cards) {
+    for (int i = 0; i < num_cards; i++) {
+        draw_card_by_rank(deck, rank, hand_cards);
+    }
+}
+
+void draw_n_cards_by_suit(ListCards* deck, Suit suit, ListCards* hand_cards, int num_cards) {
+    for (int i = 0; i < num_cards; i++) {
+        draw_card_by_suit(deck, suit, hand_cards);
+    }
 }
 
 bool search_royal_straight_flush(ListCards* deck, ListCards* hand_cards) {
@@ -151,12 +162,9 @@ bool search_straight_flush(ListCards* deck, ListCards* hand_cards) {
 bool search_four_of_a_kind(ListCards* deck, ListCards* hand_cards) {
     int* rank_counts = create_rank_counts(deck);
 
-    for (int i = RANK_2; i <= RANK_ACE; i++) {
-        if (rank_counts[i] == NUM_CARDS_FOR_4K) {
-            draw_card_by_rank(deck, i, hand_cards);
-            draw_card_by_rank(deck, i, hand_cards);
-            draw_card_by_rank(deck, i, hand_cards);
-            draw_card_by_rank(deck, i, hand_cards);
+    for (int rank = RANK_2; rank <= RANK_ACE; rank++) {
+        if (rank_counts[rank] == NUM_CARDS_FOR_4K) {
+            draw_n_cards_by_rank(deck, rank, hand_cards, NUM_CARDS_FOR_4K);
 
             free(rank_counts);
             return true;
@@ -174,24 +182,20 @@ bool search_full_house(ListCards* deck, ListCards* hand_cards) {
     int trio_rank = -1;
     int pair_rank = -1;
 
-    for (int i = RANK_2; i <= RANK_ACE; i++) {
-        if (rank_counts[i] == NUM_CARDS_FOR_3K) {
-            trio_rank = i;
+    for (int rank = RANK_2; rank <= RANK_ACE; rank++) {
+        if (rank_counts[rank] == NUM_CARDS_FOR_3K) {
+            trio_rank = rank;
         }
-        else if (rank_counts[i] == NUM_CARDS_FOR_PAIR) {
-            pair_rank = i;
+        else if (rank_counts[rank] == NUM_CARDS_FOR_PAIR) {
+            pair_rank = rank;
         }
     }
 
     free(rank_counts);
 
     if (trio_rank != -1 && pair_rank != -1) {
-        draw_card_by_rank(deck, trio_rank, hand_cards);
-        draw_card_by_rank(deck, trio_rank, hand_cards);
-        draw_card_by_rank(deck, trio_rank, hand_cards);
-
-        draw_card_by_rank(deck, pair_rank, hand_cards);
-        draw_card_by_rank(deck, pair_rank, hand_cards);
+        draw_n_cards_by_rank(deck, trio_rank, hand_cards, NUM_CARDS_FOR_3K);
+        draw_n_cards_by_rank(deck, pair_rank, hand_cards, NUM_CARDS_FOR_PAIR);
 
         return true;
     }
@@ -202,13 +206,9 @@ bool search_full_house(ListCards* deck, ListCards* hand_cards) {
 bool search_flush(ListCards* deck, ListCards* hand_cards) {
     int* suit_counts = create_suit_counts(deck);
 
-    for (int i = SUIT_HEARTS; i <= SUIT_SPADES; i++) {
-        if (suit_counts[i] == 5) {
-            draw_card_by_suit(deck, i, hand_cards);
-            draw_card_by_suit(deck, i, hand_cards);
-            draw_card_by_suit(deck, i, hand_cards);
-            draw_card_by_suit(deck, i, hand_cards);
-            draw_card_by_suit(deck, i, hand_cards);
+    for (int suit = SUIT_HEARTS; suit <= SUIT_SPADES; suit++) {
+        if (suit_counts[suit] == NUM_CARDS_FOR_SF) {
+            draw_n_cards_by_suit(deck, suit, hand_cards, NUM_CARDS_FOR_SF);
 
             free(suit_counts);
             return true;
@@ -221,17 +221,15 @@ bool search_flush(ListCards* deck, ListCards* hand_cards) {
 bool search_straight(ListCards* deck, ListCards* hand_cards) {
     int* rank_counts = create_rank_counts(deck);
 
-    for (int i = RANK_10; i <= RANK_ACE; i++) {
-        if (rank_counts[i] == 0) {
+    for (int rank = RANK_10; rank <= RANK_ACE; rank++) {
+        if (rank_counts[rank] == 0) {
             free(rank_counts);
             return false;
         }
     }
 
-    for (int i = RANK_10; i <= RANK_ACE; i++) {
-        Card* C = list_get_card_by_rank(deck, i);
-        add_card_to_deck(hand_cards, get_rank(C), get_suit(C));
-        list_remove(deck, C);
+    for (int rank = RANK_10; rank <= RANK_ACE; rank++) {
+        draw_card_by_rank(deck, rank, hand_cards);
     }
 
     free(rank_counts);
@@ -241,11 +239,9 @@ bool search_straight(ListCards* deck, ListCards* hand_cards) {
 bool search_three_of_a_kind(ListCards* deck, ListCards* hand_cards) {
     int* rank_counts = create_rank_counts(deck);
 
-    for (int i = RANK_2; i <= RANK_ACE; i++) {
-        if (rank_counts[i] == NUM_CARDS_FOR_3K) {
-            draw_card_by_rank(deck, i, hand_cards);
-            draw_card_by_rank(deck, i, hand_cards);
-            draw_card_by_rank(deck, i, hand_cards);
+    for (int rank = RANK_2; rank <= RANK_ACE; rank++) {
+        if (rank_counts[rank] == NUM_CARDS_FOR_3K) {
+            draw_n_cards_by_rank(deck, rank, hand_cards, NUM_CARDS_FOR_3K);
 
             free(rank_counts);
             return true;
@@ -260,15 +256,15 @@ bool search_two_pair(ListCards* deck, ListCards* hand_cards) {
     int* rank_counts = create_rank_counts(deck);
     int pair_count = 0;
 
-    for (int i = RANK_2; i <= RANK_ACE; i++) {
-        if (rank_counts[i] == NUM_CARDS_FOR_PAIR) {
+    for (int rank = RANK_2; rank <= RANK_ACE; rank++) {
+        if (rank_counts[rank] == NUM_CARDS_FOR_PAIR) {
             pair_count++;
         }
     }
 
     free(rank_counts);
 
-    if (pair_count >= 2) {
+    if (pair_count >= NUM_CARDS_FOR_PAIR) {
         search_pair(deck, hand_cards);
         search_pair(deck, hand_cards);
 
@@ -281,10 +277,10 @@ bool search_two_pair(ListCards* deck, ListCards* hand_cards) {
 bool search_pair(ListCards* deck, ListCards* hand_cards) {
     int* rank_counts = create_rank_counts(deck);
 
-    for (int i = RANK_2; i <= RANK_ACE; i++) {
-        if (rank_counts[i] == NUM_CARDS_FOR_PAIR) {
-            draw_card_by_rank(deck, i, hand_cards);
-            draw_card_by_rank(deck, i, hand_cards);
+    for (int rank = RANK_2; rank <= RANK_ACE; rank++) {
+        if (rank_counts[rank] == NUM_CARDS_FOR_PAIR) {
+            draw_n_cards_by_rank(deck, rank, hand_cards, NUM_CARDS_FOR_PAIR);
+
 
             free(rank_counts);
             return true;
@@ -295,3 +291,8 @@ bool search_pair(ListCards* deck, ListCards* hand_cards) {
     return false;
 }
 
+void create_hand_high_card(ListCards* deck, ListCards* hand_cards, int n_cards) {
+    for (int i = 0; i < n_cards; i++) {
+        move_random_card_to_player(deck, hand_cards);
+    }
+}

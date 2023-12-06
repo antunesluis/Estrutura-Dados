@@ -21,10 +21,23 @@ typedef struct _player {
     ListCards* deck;
     GameHand* hands;
     int num_hands;
+    int cards_per_hand;
 } Player;
 
 
 #define NUM_HANDS 5
+#define NUM_CARDS_PER_HAND 5
+
+#define RSF_POINTS 1000
+#define SF_POINTS 750
+#define FOUR_K_POINTS 500
+#define FH_POINTS 300
+#define FL_POINTS 200
+#define ST_POINTS 150
+#define THREE_K_POINTS 100
+#define TWO_P_POINTS 50
+#define ONE_P_POINTS 25
+#define HIGHCARD_POINTS 0
 
 
 void wait_for_enter() {
@@ -46,6 +59,7 @@ Player* create_player(ListCards* deck) {
 
     p->deck = deck;
     p->num_hands = NUM_HANDS;
+    p->cards_per_hand = NUM_CARDS_PER_HAND;
     p->hands = (GameHand*)calloc(p->num_hands, sizeof(GameHand));
 
     for (int i = 0; i < p->num_hands; i++) {
@@ -83,16 +97,7 @@ bool validate_index_bounds(size_t deck_size, int index) {
     return true;
 }
 
-void print_hand(ListCards* hand_cards) {
-    //clear_terminal();
-    printf("\n---- Mao criada com sucesso ----\n");
-    list_cards_print(hand_cards);
-    puts("");
-}
-
 void print_all_hands(Player* P) {
-    //clear_terminal();
-
     printf("\n---- Maos criadas ----\n");
 
     for (int i = 0; i < P->num_hands; i++) {
@@ -102,55 +107,68 @@ void print_all_hands(Player* P) {
     }
 }
 
+void check_missing_cards(ListCards* deck, ListCards* hand_cards) {
+    unsigned int n_cards_missing = 5 - list_size(hand_cards);
+
+    if (list_size(hand_cards) > 0 && list_size(deck) > 0) {
+        for (int i = 0; i < n_cards_missing; i++) {
+            move_random_card_to_player(deck, hand_cards);
+        }
+    }
+}
+
 int search_for_classification(Player* P, ListCards* hand_cards) {
     if (search_royal_straight_flush(P->deck, hand_cards)) {
-        return 1000;
+        return RSF_POINTS;
     }
 
     if (search_straight_flush(P->deck, hand_cards)) {
-        return 750;
+        return SF_POINTS;
     }
 
     if (search_four_of_a_kind(P->deck, hand_cards)) {
-        return 500;
+        return FOUR_K_POINTS;
     }
 
     if (search_full_house(P->deck, hand_cards)) {
-        return 300;
+        return FH_POINTS;
     }
 
     if (search_flush(P->deck, hand_cards)) {
-        return 200;
+        return FL_POINTS;
     }
 
     if (search_straight(P->deck, hand_cards)) {
-        return 150;
+        return ST_POINTS;
     }
 
     if (search_three_of_a_kind(P->deck, hand_cards)) {
-        return 100;
+        return THREE_K_POINTS;
     }
 
     if (search_two_pair(P->deck, hand_cards)) {
-        return 50;
+        return TWO_P_POINTS;
     }
 
     if (search_pair(P->deck, hand_cards)) {
-        return 25;
+        return ONE_P_POINTS;
     }
 
-    return 0;
+    create_hand_high_card(P->deck, hand_cards, P->cards_per_hand);
+    return HIGHCARD_POINTS;
 }
 
 void read_hands(Player* P) {
-    printf("\n---- Deck Original ----");
+    clear_terminal();
+    printf("\n---- Deck Original ----\n");
     list_cards_print(P->deck);
 
     for (int i = 0; i < P->num_hands; i++) {
         P->hands[i].points = search_for_classification(P, P->hands[i].cards);
-        print_hand(P->hands[i].cards);
-        printf("PONTOS: %d", P->hands[i].points);
     }
 
+    for (int i = 0; i < P->num_hands; i++) {
+        check_missing_cards(P->deck, P->hands[i].cards);
+    }
     print_all_hands(P);
 }

@@ -99,7 +99,6 @@ void list_add_first(ListCards* L, Card* card) {
         L->begin->prev = p;
     }
 
-    // List_is_empty(L) ? (L->end = p) : (L->begin->prev = p); 
     L->begin = p;
     L->size++;
 
@@ -116,7 +115,6 @@ void list_add_last(ListCards* L, Card* card) {
         L->end->next = p;
     }
 
-    // List_is_empty(L) ? (L->begin = p) : (L->end->prev = p);
     L->end = p;
     L->size++;
 }
@@ -220,7 +218,20 @@ bool list_contains_card(const ListCards* L, Rank rank, Suit suit) {
 void list_cards_print(const ListCards* L) {
     Node* p = L->begin;
 
-    //printf("\nCartas restantes: %lu\n", L->size);
+    const char* rank_symbols[] = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
+    const char* suit_symbols[] = { "Hearts", "Diamonds", "Clubs", "Spades" };
+
+    puts("");
+    for (int i = 0; i < L->size; i++) {
+        printf("\t%02d. : ", i);
+        printf("Rank: %s, Suit: %s\n", rank_symbols[p->card->rank - 2], suit_symbols[p->card->suit - 1]);
+        p = p->next;
+    }
+    puts("");
+}
+
+void list_cards_print_old(const ListCards* L) {
+    Node* p = L->begin;
 
     puts("");
     for (int i = 0; i < L->size; i++) {

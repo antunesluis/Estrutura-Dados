@@ -1,6 +1,7 @@
 #ifndef POKER_CLASSIFICATION_H
 #define POKER_CLASSIFICATION_H
 
+void create_hand_high_card(ListCards* deck, ListCards* hand_cards, int n_cards);
 bool search_pair(ListCards* deck, ListCards* hand_cards);
 bool search_two_pair(ListCards* deck, ListCards* hand_cards);
 bool search_three_of_a_kind(ListCards* deck, ListCards* hand_cards);
